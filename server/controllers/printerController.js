@@ -18,7 +18,7 @@ exports.getAllPrinter = async (req, res) => {
 
 exports.getPrinter = async (req, res) => {
   try {
-    const printer = await Printer.findByID(req.params.id);
+    const printer = await Printer.findById(req.params.id);
     res.status(200).json({
       status: "success",
       data: {
@@ -52,7 +52,7 @@ exports.createPrinter = async (req, res) => {
 
 exports.updatePrinter = async (req, res) => {
   try {
-    const updatePrinter = await Printer.findByIDAndUpdate(
+    const updatePrinter = await Printer.findByIdAndUpdate(
       req.params.id,
       req.body,
       {
@@ -76,7 +76,7 @@ exports.updatePrinter = async (req, res) => {
 
 exports.deletePrinter = async (req, res) => {
   try {
-    await Printer.findByIDAndDelete(req.params.id);
+    await Printer.findByIdAndDelete(req.params.id);
     res.status(204).json({
       status: "success",
       data: null,
