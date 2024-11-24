@@ -19,18 +19,33 @@ export default function System() {
     //   status: "Offline",
     // },
   ]);
-  useEffect(() => {
+  // useEffect(() => {
+  //   AxiosInstance.get(`printers`)
+  //     .then((res) => setPrinter(res.data.data.allPrinter))
+  //     .catch((err) => console.log(err));
+  // }, [res.data.data.allPrinter]);
+
+  const fetchPrinters = () => {
     AxiosInstance.get(`printers`)
-      .then((res) => console.log("printer: ", res))
+      .then((res) => setPrinter(res.data.data.allPrinter))
       .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    fetchPrinters();
   }, []);
-  // console.log("printer: ", printer);
+
   const [newPrinter, setNewPrinter] = useState({
-    id: "",
-    campus: "",
-    building: "",
-    room: "",
-    status: "Online", // Giá trị mặc định
+    // id: "",
+    // campus: "",
+    // building: "",
+    // room: "",
+    // status: "Online", // Giá trị mặc định
+    type: "",
+    location: "",
+    paperType: ["A0", "A1", "A2", "A3", "A4"],
+    status: "",
+    currentPaper: "",
   });
   const [filteredData, setFilteredData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
@@ -56,14 +71,10 @@ export default function System() {
     const confirm = window.confirm("Would you like to delete this printer?");
     if (confirm) {
       try {
-        await AxiosInstance.delete(`printers/${id}`);
-        toast.success("Deleted Successfully!");
-
-        // Cập nhật danh sách máy in sau khi xóa thành công
-        setPrinter((prevPrinter) =>
-          prevPrinter.filter((printer) => printer.id !== id)
-        );
-
+        const res = await AxiosInstance.delete(`printers/${id}`);
+        // toast.success("Deleted Successfully!");
+        console.log(res);
+        fetchPrinters();
         // setFilteredData((prevFilteredData) =>
         //   prevFilteredData.filter((printer) => printer.id !== id)
         // );
@@ -82,41 +93,69 @@ export default function System() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewPrinter({ ...newPrinter, [name]: value });
+    const parsedValue =
+      value === "true" ? true : value === "false" ? false : value;
+    setNewPrinter({ ...newPrinter, [name]: parsedValue });
   };
 
-  const handleFormSubmit = (e) => {
+  const removePaperType = (index) => {
+    const newPaperType = newPrinter.paperType.filter((_, i) => i !== index);
+    setNewPrinter({ ...newPrinter, paperType: newPaperType });
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     if (
-      !newPrinter.id ||
-      !newPrinter.campus ||
-      !newPrinter.building ||
-      !newPrinter.room
+      !newPrinter.type ||
+      !newPrinter.location ||
+      !newPrinter.paperType ||
+      !newPrinter.status
     ) {
-      alert("Vui lòng điền đầy đủ thông tin!");
+      alert("Vui lòng điền đầy đủ thông tin, kiểm tra lại trạng thái");
       return;
     }
 
-    // Thêm máy in mới vào danh sách
-    setPrinter((prevPrinters) => [...prevPrinters, newPrinter]);
+    // !newPrinter.status ? "" : setNewPrinter({ ...newPrinter, status: false });
 
-    // Xóa thông tin trong form sau khi submit
-    setNewPrinter({
-      id: "",
-      campus: "",
-      building: "",
-      room: "",
-      status: "Online",
-    });
+    if (!Number.isInteger(Number(newPrinter.currentPaper))) {
+      alert("Số giấy ban đầu phải là một số nguyên!");
+      return;
+    }
 
-    // Đóng modal sau khi thêm
-    const modalElement = document.getElementById("AddNewPrinter");
-    const modal = bootstrap.Modal.getInstance(modalElement);
-    modal.hide();
+    // // Thêm máy in mới vào danh sách
+    // setPrinter((prevPrinters) => [...prevPrinters, newPrinter]);
+
+    try {
+      const res = await AxiosInstance.post(`printers/`, newPrinter);
+      if (res.status === 201) {
+        console.log("Submit thành công:", res.data);
+        fetchPrinters();
+        setNewPrinter({
+          type: "",
+          location: "",
+          paperType: ["A0", "A1", "A2", "A3", "A4"],
+          status: "",
+          currentPaper: "",
+        });
+      }
+    } catch (error) {
+      console.log(res);
+    }
+
+    // // Xóa thông tin trong form sau khi submit
+    // setNewPrinter({
+    //   // id: "",
+    //   // campus: "",
+    //   // building: "",
+    //   // room: "",
+    //   // status: "Online",
+    // });
   };
 
   const renderPrinters = searchValue ? filteredData : printer;
+  // console.log("printer: ", ren);
+  // renderPrinters.map((d) => console.log(d.type));
 
   return (
     <>
@@ -143,9 +182,9 @@ export default function System() {
               <thead>
                 <tr>
                   <th>Mã máy in</th>
-                  <th>Cơ sở</th>
-                  <th>Tòa</th>
-                  <th>Tầng-Phòng</th>
+                  <th>Kiểu máy</th>
+                  <th>Địa điểm</th>
+                  <th>Số giấy hiện dụng</th>
                   <th>Trạng thái</th>
                   <th>Hành động</th>
                 </tr>
@@ -153,12 +192,12 @@ export default function System() {
               <tbody>
                 {renderPrinters.length > 0 ? (
                   renderPrinters.map((d) => (
-                    <tr key={d.id}>
-                      <td>{d.id}</td>
-                      <td>{d.campus}</td>
-                      <td>{d.building}</td>
-                      <td>{d.room}</td>
-                      <td>{d.status}</td>
+                    <tr key={d._id}>
+                      <td>{d._id}</td>
+                      <td>{d.type}</td>
+                      <td>{d.location}</td>
+                      <td>{d.currentPaper}</td>
+                      <td>{d.status ? "Active" : "Inactive"}</td>
                       <td>
                         {/* <button
                           className="btn btn-primary btn-sm me-2"
@@ -168,7 +207,7 @@ export default function System() {
                         </button> */}
                         <button
                           className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(d.id)}
+                          onClick={() => handleDelete(d._id)}
                         >
                           Delete
                         </button>
@@ -225,35 +264,90 @@ export default function System() {
               <div className="modal-body">
                 <div className="mb-3">
                   <label htmlFor="id" className="form-label">
-                    Mã máy in
+                    Kiểu máy in
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="id"
-                    name="id"
-                    value={newPrinter.id}
+                    id="type"
+                    name="type"
+                    value={newPrinter.type}
                     onChange={handleInputChange}
-                    placeholder="Nhập mã máy in"
+                    placeholder="Nhập kiểu (tên) máy in"
                     required
                   />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="campus" className="form-label">
-                    Cơ sở
+                    Số giấy ban đầu
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="campus"
-                    name="campus"
-                    value={newPrinter.campus}
+                    id="currentPaper"
+                    name="currentPaper"
+                    value={newPrinter.currentPaper}
                     onChange={handleInputChange}
-                    placeholder="Nhập cơ sở"
+                    placeholder="Nhập số giấy"
                     required
                   />
                 </div>
                 <div className="mb-3">
+                  <label htmlFor="campus" className="form-label">
+                    Địa điểm
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="location"
+                    name="location"
+                    value={newPrinter.location}
+                    onChange={handleInputChange}
+                    placeholder="CS1-B4-104"
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="campus" className="form-label">
+                    Trạng thái
+                  </label>
+                  <select
+                    className="form-control"
+                    id="status"
+                    name="status"
+                    value={newPrinter.status}
+                    onChange={handleInputChange}
+                  >
+                    <option value="" disabled>
+                      Chọn trạng thái
+                    </option>
+                    <option value="true">Kích Hoạt</option>
+                    <option value="false">Vô Hiệu Hóa</option>
+                  </select>
+                </div>
+                <label htmlFor="campus" className="form-label">
+                  Loại giấy hỗ trợ
+                </label>
+                <div className="container">
+                  {newPrinter.paperType.map((d, i) => (
+                    <div className="input-group mb-1" key={i}>
+                      <input
+                        type="text"
+                        value={d}
+                        readOnly
+                        className="form-control"
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        onClick={() => removePaperType(i)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {/* <div className="mb-3">
                   <label htmlFor="building" className="form-label">
                     Tòa
                   </label>
@@ -282,10 +376,14 @@ export default function System() {
                     placeholder="Nhập tầng - phòng"
                     required
                   />
-                </div>
+                </div> */}
               </div>
               <div className="modal-footer border-0">
-                <button type="submit" className="btn btn-primary w-100">
+                <button
+                  type="button"
+                  className="btn btn-primary w-100"
+                  onClick={(e) => handleFormSubmit(e)}
+                >
                   Lưu
                 </button>
               </div>
