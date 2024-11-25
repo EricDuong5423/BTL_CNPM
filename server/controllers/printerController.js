@@ -3,7 +3,7 @@ exports.getAllPrinter = async (req, res) => {
   try {
     let queryStr = JSON.stringify(req.query);
     queryStr = queryStr.replace(/\bgte|gt|lte|lt\b/g, (match) => `$${match}`);
-    const allPrinter = await Printer.find();
+    const allPrinter = await Printer.find(JSON.parse(queryStr));
     res.status(200).json({
       status: "success",
       data: {
