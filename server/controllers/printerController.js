@@ -1,7 +1,15 @@
-const Printer = require("../models/printerModules");
+const Printer = require("../models/printerModels");
+const APIFeatures = require("../utils/APIFeatures");
+
 exports.getAllPrinter = async (req, res) => {
   try {
-    const allPrinter = await Printer.find();
+    const features = new APIFeatures(Printer.find(), req.query)
+      .filter()
+      .sort()
+      .select()
+      .page();
+
+    const allPrinter = await features.query;
     res.status(200).json({
       status: "success",
       data: {
