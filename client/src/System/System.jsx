@@ -26,7 +26,7 @@ export default function System() {
   // }, [res.data.data.allPrinter]);
 
   const fetchPrinters = () => {
-    AxiosInstance.get(`printers`)
+    AxiosInstance.get(`printers/`)
       .then((res) => setPrinter(res.data.data.allPrinter))
       .catch((err) => console.log(err));
   };
@@ -105,12 +105,12 @@ export default function System() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+    const Status_selector = document.querySelector("#status");
     if (
       !newPrinter.type ||
       !newPrinter.location ||
       !newPrinter.paperType ||
-      !newPrinter.status
+      Status_selector.value === null
     ) {
       alert("Vui lòng điền đầy đủ thông tin, kiểm tra lại trạng thái");
       return;
@@ -122,6 +122,8 @@ export default function System() {
       alert("Số giấy ban đầu phải là một số nguyên!");
       return;
     }
+
+    console.log(newPrinter);
 
     // // Thêm máy in mới vào danh sách
     // setPrinter((prevPrinters) => [...prevPrinters, newPrinter]);
@@ -315,14 +317,13 @@ export default function System() {
                     className="form-control"
                     id="status"
                     name="status"
-                    value={newPrinter.status}
                     onChange={handleInputChange}
                   >
-                    <option value="" disabled>
+                    <option value={null} disabled className="option">
                       Chọn trạng thái
                     </option>
-                    <option value="true">Kích Hoạt</option>
-                    <option value="false">Vô Hiệu Hóa</option>
+                    <option value={true}>Kích Hoạt</option>
+                    <option value={false}>Vô Hiệu Hóa</option>
                   </select>
                 </div>
                 <label htmlFor="campus" className="form-label">
