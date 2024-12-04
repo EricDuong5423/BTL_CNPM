@@ -39,19 +39,38 @@ exports.signupRoute = async (req, res) => {
       realName: req.body.realName
     };
 
+    function isValidString(x) {
+      return ((typeof x === "string") || (x instanceof String)) && (x.length > 0) && (x.length <= 128);
+    }
+
+    if (!isValidString(data.username) || !isValidString(data.password) || !isValidString(data.realName)) {
+      res.status(400).json({
+        status: "fail",
+        message: "Missing fields or fields too long/short"
+      });
+
+      return;
+    }
+
     const existingUser = await User.findOne({ username: data.username });
     if (existingUser) {
       res.status(409).json({
         status: "fail",
         message: "A user with this username already exists"
       });
+
+      return;
     }
 
     const newUser = await User.create(data);
+    const token = createToken(data.username);
     res.status(201).json({
       status: "success",
-      token: "todo",
-      user: newUser
+      token: token,
+      user: {
+        name: data.username,
+        realName: data.realName
+      }
     });
   } catch (err) {
     res.status(404).json({
@@ -74,6 +93,8 @@ exports.loginRoute = async (req, res) => {
         status: "fail",
         message: "No such account with these credentials"
       });
+
+      return;
     }
 
     const token = createToken(matchedUser.username);
@@ -99,6 +120,31 @@ exports.logoutRoute = async (req, res) => {
     const token = req.body.token;
 
     if (invalidateToken(token)) {
+      res.status(200).json({
+        status: "success"
+      });
+    } else {
+      res.status(200).json({
+        status: "fail",
+        message: "No such token"
+      });
+    }
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
+}
+
+exports.deleteAccountRoute = async (req, res) => {
+  try {
+    const token = req.body.token;
+
+    let username = currentTokens.get(token);
+    if (username) {
+      await User.findOneAndRemove({ username: username });
+      invalidateToken(token);
       res.status(200).json({
         status: "success"
       });
