@@ -4,11 +4,11 @@ const userController = require(`${__dirname}/../controllers/userController.js`);
 
 router
   .route("/users/login")
-  .post(userController.login);
+  .post(userController.loginRoute);
 router
   .route("/users/logout")
-  .post(userController.logout);
+  .post(userController.logoutRoute);
 router
   .route("/users/signup")
-  .post(userController.signup);
+  .post(userController.signupRoute);
 module.exports = router;
