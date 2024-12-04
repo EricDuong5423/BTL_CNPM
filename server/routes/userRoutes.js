@@ -11,4 +11,7 @@ router
 router
   .route("/signup")
   .post(userController.signupRoute);
+router
+  .route("/deleteAccount")
+  .post(userController.deleteAccountRoute);
 module.exports = router;
