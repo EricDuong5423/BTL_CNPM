@@ -23,12 +23,12 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     const loadingToastId = toast.loading("Logging in...");
-    console.log("username: ", email);
-    console.log("password: ", password);
+    // console.log("username: ", email);
+    // console.log("password: ", password);
 
     AxiosInstance.post(`users/login/`, {
-      // username: email,
-      // password: password,
+      username: email,
+      password: password,
       // realName: "Khoa",
     })
       .then((response) => {

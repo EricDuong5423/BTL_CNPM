@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Search from "../Component/Search";
 import AxiosInstance from "../Component/AxiosInstance";
+import Pagination from "../Component/Pagination";
 
 export default function System() {
   const [printer, setPrinter] = useState([
@@ -19,6 +20,19 @@ export default function System() {
     //   status: "Offline",
     // },
   ]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [newPrinter, setNewPrinter] = useState({
+    type: "",
+    location: "",
+    paperType: ["A0", "A1", "A2", "A3", "A4"],
+    status: "",
+    currentPaper: "",
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const dataPerPage = 5;
+  const [renderPrinters, setRenderPrinters] = useState([]);
+
   // useEffect(() => {
   //   AxiosInstance.get(`printers`)
   //     .then((res) => setPrinter(res.data.data.allPrinter))
@@ -35,20 +49,12 @@ export default function System() {
     fetchPrinters();
   }, []);
 
-  const [newPrinter, setNewPrinter] = useState({
-    // id: "",
-    // campus: "",
-    // building: "",
-    // room: "",
-    // status: "Online", // Giá trị mặc định
-    type: "",
-    location: "",
-    paperType: ["A0", "A1", "A2", "A3", "A4"],
-    status: "",
-    currentPaper: "",
-  });
-  const [filteredData, setFilteredData] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
+  useEffect(() => {
+    const indexOfLastData = currentPage * dataPerPage;
+    const indexOfFirstData = indexOfLastData - dataPerPage;
+    const dataSource = searchValue ? filteredData : printer;
+    setRenderPrinters(dataSource.slice(indexOfFirstData, indexOfLastData));
+  }, [currentPage, searchValue, filteredData, printer, dataPerPage]);
 
   const handleSearchChange = (searchValue) => {
     setSearchValue(searchValue.trim());
@@ -59,7 +65,9 @@ export default function System() {
         return item.type.toLowerCase().includes(searchValue.toLowerCase());
       });
       setFilteredData(filtered);
+      setRenderPrinters(filtered.slice(0, dataPerPage));
     }
+    setCurrentPage(1);
   };
 
   const handleAction = (action, printerId) => {
@@ -103,6 +111,31 @@ export default function System() {
     setNewPrinter({ ...newPrinter, paperType: newPaperType });
   };
 
+  const handleChangeStatus = (id, currentStatus) => {
+    // console.log(id, "+", currentStatus);
+
+    // Đảo ngược trạng thái hiện tại
+    const newStatus = !currentStatus;
+
+    // Tạo body của request
+    const body = { status: newStatus };
+
+    // Gửi yêu cầu cập nhật trạng thái
+    AxiosInstance.patch(`printers/${id}`, body)
+      .then((response) => {
+        console.log("Status updated successfully:", response.data);
+        // Cập nhật trạng thái của máy in trong state
+        const updatedPrinters = printer.map((item) =>
+          item._id === id ? { ...item, status: newStatus } : item
+        );
+        setPrinter(updatedPrinters);
+      })
+      .catch((error) => {
+        console.error("Error updating status:", error);
+        // Hiển thị thông báo lỗi nếu cần
+      });
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const Status_selector = document.querySelector("#status");
@@ -110,23 +143,21 @@ export default function System() {
       !newPrinter.type ||
       !newPrinter.location ||
       !newPrinter.paperType ||
-      Status_selector.value === null
+      Status_selector.value === null ||
+      !newPrinter.status
     ) {
       alert("Vui lòng điền đầy đủ thông tin, kiểm tra lại trạng thái");
       return;
     }
 
-    // !newPrinter.status ? "" : setNewPrinter({ ...newPrinter, status: false });
+    // newPrinter.status === null ? "" : setNewPrinter({ ...newPrinter, status: false });
 
     if (!Number.isInteger(Number(newPrinter.currentPaper))) {
       alert("Số giấy ban đầu phải là một số nguyên!");
       return;
     }
 
-    console.log(newPrinter);
-
-    // // Thêm máy in mới vào danh sách
-    // setPrinter((prevPrinters) => [...prevPrinters, newPrinter]);
+    // console.log(newPrinter);
 
     try {
       const res = await AxiosInstance.post(`printers/`, newPrinter);
@@ -144,20 +175,11 @@ export default function System() {
     } catch (error) {
       console.log(res);
     }
-
-    // // Xóa thông tin trong form sau khi submit
-    // setNewPrinter({
-    //   // id: "",
-    //   // campus: "",
-    //   // building: "",
-    //   // room: "",
-    //   // status: "Online",
-    // });
   };
 
-  const renderPrinters = searchValue ? filteredData : printer;
-  // console.log("printer: ", ren);
-  // renderPrinters.map((d) => console.log(d.type));
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -199,7 +221,17 @@ export default function System() {
                       <td>{d.type}</td>
                       <td>{d.location}</td>
                       <td>{d.currentPaper}</td>
-                      <td>{d.status ? "Active" : "Inactive"}</td>
+                      <td>
+                        {/* {d.status ? "Active" : "Inactive"} */}
+                        <div className="form-check form-switch">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            defaultChecked={d.status}
+                            onChange={() => handleChangeStatus(d._id, d.status)}
+                          />
+                        </div>
+                      </td>
                       <td>
                         {/* <button
                           className="btn btn-primary btn-sm me-2"
@@ -231,6 +263,30 @@ export default function System() {
               </tbody>
             </table>
           </div>
+          {/* <div className=" align-self-center" id="pagenation">
+            <nav aria-label="...">
+              <ul class="pagination pagination">
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link">1</span>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">
+                    2
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#">
+                    3
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div> */}
+          <Pagination
+            totalPrinters={searchValue ? filteredData.length : printer.length}
+            dataPerPage={dataPerPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
 
@@ -319,9 +375,7 @@ export default function System() {
                     name="status"
                     onChange={handleInputChange}
                   >
-                    <option value={true} disabled className="option">
-                      Chọn trạng thái
-                    </option>
+                    <option className="option">Chọn trạng thái</option>
                     <option value={true}>Kích Hoạt</option>
                     <option value={false}>Vô Hiệu Hóa</option>
                   </select>
