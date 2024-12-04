@@ -3,12 +3,12 @@ const router = express.Router();
 const userController = require(`${__dirname}/../controllers/userController.js`);
 
 router
-  .route("/users/login")
+  .route("/login")
   .post(userController.loginRoute);
 router
-  .route("/users/logout")
+  .route("/logout")
   .post(userController.logoutRoute);
 router
-  .route("/users/signup")
+  .route("/signup")
   .post(userController.signupRoute);
 module.exports = router;

@@ -27,5 +27,5 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1/printers", printerRoutes);
-app.use("/api/v1/routers", userRoutes);
+app.use("/api/v1/users", userRoutes);
 module.exports = app;
