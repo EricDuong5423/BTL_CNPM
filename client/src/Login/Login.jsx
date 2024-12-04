@@ -1,26 +1,40 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
 // import AxiosInstance from "../components/AxiosInstance";
+import AxiosInstance from "../Component/AxiosInstance";
 import { toast } from "react-toastify";
 import "../App.css";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm(); // Sử dụng `register` thay vì `control`
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const submission = (data) => {
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setLoading(true);
     const loadingToastId = toast.loading("Logging in...");
-    AxiosInstance.post(`login/`, {
-      email: data.email,
-      password: data.password,
+    console.log("username: ", email);
+    console.log("password: ", password);
+
+    AxiosInstance.post(`users/login/`, {
+      // username: email,
+      // password: password,
+      // realName: "Khoa",
     })
       .then((response) => {
         console.log(response);
         localStorage.setItem("Token", response.data.token);
-        navigate(`/home`);
+        navigate(`/system`);
         toast.success("Login successful!");
       })
       .catch((error) => {
@@ -35,10 +49,7 @@ const Login = () => {
 
   return (
     <div className="myBackground d-flex justify-content-center align-items-center vh-100">
-      <form
-        className="p-4 rounded shadow whiteBox"
-        onSubmit={handleSubmit(submission)}
-      >
+      <form className="p-4 rounded shadow whiteBox" onSubmit={handleSubmit}>
         <div className="text-center mb-4">
           <h3 className="fw-bold">LOGIN PAGE</h3>
         </div>
@@ -53,7 +64,9 @@ const Login = () => {
             className="form-control"
             id="email"
             placeholder="Enter your email"
-            {...register("email", { required: true })}
+            value={email}
+            onChange={handleEmailChange}
+            required
           />
         </div>
 
@@ -67,7 +80,9 @@ const Login = () => {
             className="form-control"
             id="password"
             placeholder="Enter your password"
-            {...register("password", { required: true })}
+            value={password}
+            onChange={handlePasswordChange}
+            required
           />
         </div>
 

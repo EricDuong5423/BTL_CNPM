@@ -2,9 +2,24 @@ import React, { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import AxiosInstance from "./AxiosInstance";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const handleLogout = () => {
+    const token = localStorage.getItem("Token");
+    AxiosInstance.post(`users/logout/`, { token: token })
+      .then(() => {
+        localStorage.removeItem("Token");
+        navigate("/");
+        toast.success("Logged out successfully!");
+      })
+      .catch((error) => {
+        toast.error("An error occurred while logging out!");
+        console.error("Error logging out:", error);
+      });
+  };
   return (
     <>
       <nav
@@ -67,6 +82,7 @@ export default function Navbar() {
             <button
               className="btn btn text-white"
               style={{ backgroundColor: "#3A4163" }}
+              onClick={handleLogout}
             >
               Đăng Xuất
             </button>

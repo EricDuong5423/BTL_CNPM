@@ -55,9 +55,9 @@ export default function System() {
     if (!searchValue.trim()) {
       setFilteredData([]);
     } else {
-      const filtered = printer.filter((item) =>
-        item.id.toLowerCase().includes(searchValue.toLowerCase())
-      );
+      const filtered = printer.filter((item) => {
+        return item.type.toLowerCase().includes(searchValue.toLowerCase());
+      });
       setFilteredData(filtered);
     }
   };
@@ -162,7 +162,7 @@ export default function System() {
   return (
     <>
       <div className="container my-5">
-        <div className="card shadow">
+        <div className="card shadow" style={{ minHeight: "550px" }}>
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="mb-0">Danh sách máy in</h5>
             <div className="d-flex align-items-center">
@@ -319,7 +319,7 @@ export default function System() {
                     name="status"
                     onChange={handleInputChange}
                   >
-                    <option value={null} disabled className="option">
+                    <option value={true} disabled className="option">
                       Chọn trạng thái
                     </option>
                     <option value={true}>Kích Hoạt</option>
