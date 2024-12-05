@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 // import AxiosInstance from "../components/AxiosInstance";
 import AxiosInstance from "../Component/AxiosInstance";
 import { toast } from "react-toastify";
-import "../App.css";
+import "../Login/Login.css"
+import img1 from "../Login/LogImg.png"
 
 const Login = () => {
   const navigate = useNavigate();
@@ -48,63 +49,65 @@ const Login = () => {
   };
 
   return (
-    <div className="myBackground d-flex justify-content-center align-items-center vh-100">
-      <form className="p-4 rounded shadow whiteBox" onSubmit={handleSubmit}>
-        <div className="text-center mb-4">
-          <h3 className="fw-bold">LOGIN PAGE</h3>
-        </div>
+    <div className = "containerDB">
+      <div className = "left">
+        <div className = "Login_Frame">
+          <p className = "Login_Title">Smart Printing Service</p>
+          <form onSubmit={handleSubmit}>
 
-        {/* Email Field */}
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email
-          </label>
-          <input
-            type="email"
-            className="form-control"
-            id="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-        </div>
+            {/* Email Field */}
+            <div className="Login_Username_Field">
+              <label htmlFor="email"> 
+                Tên đăng nhập:
+              </label>
+              <input className="Login_Username_Field_Input form-control" id="email" placeholder="Nhập tên đăng nhập" 
+                value={email} onChange={handleEmailChange} required
+              />
+            </div>
 
-        {/* Password Field */}
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            id="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
+            {/* Password Field */}
+            <div className="Login_Password_Field">
+              <label htmlFor="password" className=" form-label">
+                Mật khẩu
+              </label>
+              <input
+                type="password"
+                className="form-control Login_Password_Field_Input"
+                id="password"
+                placeholder="Nhập mật khẩu"
+                value={password}
+                onChange={handlePasswordChange}
+                required
+              />
+            </div>
 
-        {/* Submit Button */}
-        <div className="mb-3">
-          <button
-            type="submit"
-            className="btn btn-primary w-100"
-            disabled={loading} // Disable button khi đang loading
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </div>
+            {/* Submit Button */}
+            <div className="Login_Submit">
+              <button
+                type="submit"
+                className="btn btn-primary w-100 Login_Submit_Button"
+                disabled={loading} // Disable button khi đang loading
+              >
+                {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+              </button>
+            </div>
 
-        {/* Forgot Password Link */}
-        <div className="text-center">
-          <Link to="/request/password_reset" className="text-decoration-none">
-            Forgot your password? Click here!
-          </Link>
+            {/* Forgot Password Link */}
+            <div className="text-center Forget_Pass_Button">
+              <Link to="/request/password_reset" className="text-decoration-none  Forget_Pass">
+                Quên mật khẩu? Tại đây!
+              </Link>
+            </div>
+
+          </form>
+
         </div>
-      </form>
-    </div>
+      </div>
+
+      <div className = "right">
+        <img className = "Image_Edit" src={img1} alt="" />
+      </div>
+  </div>
   );
 };
 
