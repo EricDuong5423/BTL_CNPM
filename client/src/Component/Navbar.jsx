@@ -81,7 +81,15 @@ export default function Navbar() {
           <div className="col">
             <button
               className="btn btn text-white"
-              style={{ backgroundColor: "#3A4163" }}
+              style={{ backgroundColor: "#3A4163", 
+                width:"160px", 
+                height:"40px",
+                textAlign:"center", 
+                lineHeight:"10px",
+                justifycontent: "center",
+                
+
+               }}
               onClick={handleLogout}
             >
               Đăng Xuất
