@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Search from "../Component/Search";
 import AxiosInstance from "../Component/AxiosInstance";
 import Pagination from "../Component/Pagination";
+import "./system.css";
 
 export default function System() {
   const [printer, setPrinter] = useState([
@@ -115,7 +116,7 @@ export default function System() {
     // console.log(id, "+", currentStatus);
 
     // Đảo ngược trạng thái hiện tại
-    const newStatus = !currentStatus;
+    const newStatus = currentStatus === "Active" ? true : false;
 
     // Tạo body của request
     const body = { status: newStatus };
@@ -184,25 +185,25 @@ export default function System() {
   return (
     <>
       <div className="container my-5">
-        <div className="card shadow" style={{ minHeight: "550px" }}>
+        <div className="card" style={{ minHeight: "550px" }}>
           <div className="card-header d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Danh sách máy in</h5>
+            <h5 className="TitleList">DANH SÁCH MÁY IN</h5>
             <div className="d-flex align-items-center">
               <Search
                 onSearchChange={handleSearchChange}
                 searchData={printer}
               />
               <button
-                className="btn btn-success ms-3"
+                className="addbutton mx-2"
                 data-bs-toggle="modal"
                 data-bs-target="#AddNewPrinter"
               >
-                + New Printer
+                +
               </button>
             </div>
           </div>
           <div className="card-body">
-            <table className="table table-hover text-center">
+            <table className="table text-center">
               <thead>
                 <tr>
                   <th>Mã máy in</th>
@@ -222,14 +223,18 @@ export default function System() {
                       <td>{d.location}</td>
                       <td>{d.currentPaper}</td>
                       <td>
-                        {/* {d.status ? "Active" : "Inactive"} */}
-                        <div className="form-check form-switch">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            defaultChecked={d.status}
-                            onChange={() => handleChangeStatus(d._id, d.status)}
-                          />
+                        {/*d.status ? "Active" : "Inactive"*/}
+                        <div className="form">
+                          <select
+                            className="form-select"
+                            defaultValue={d.status ? "Active" : "Inactive"} // Sử dụng "Active" hoặc "Inactive" làm giá trị mặc định
+                            onChange={(e) =>
+                              handleChangeStatus(d._id, e.target.value)
+                            } // Gọi hàm xử lý khi thay đổi
+                          >
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                          </select>
                         </div>
                       </td>
                       <td>
@@ -240,7 +245,7 @@ export default function System() {
                           Update
                         </button> */}
                         <button
-                          className="btn btn-danger btn-sm"
+                          className="deletebutton btn btn-danger btn-sm"
                           onClick={() => handleDelete(d._id)}
                         >
                           Delete
@@ -394,7 +399,7 @@ export default function System() {
                       />
                       <button
                         type="button"
-                        className="btn btn-danger btn-sm"
+                        className="removebutton btn btn-danger btn-sm"
                         onClick={() => removePaperType(i)}
                       >
                         Remove

@@ -19,6 +19,11 @@ const printerSchema = new mongoose.Schema({
     type: [String],
     required: [true, "A printer must have a paper type that it can use"],
   },
+  description: {
+    type: [String],
+    trim: true,
+    required: [true, "A printer must have a description"],
+  },
   currentPaper: {
     type: Number,
     default: 0,

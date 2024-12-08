@@ -5,7 +5,7 @@ export default function Footer() {
       style={{
         backgroundColor: "#3A4163",
         color: "#ffffff",
-        padding: "10x 20px",
+        padding: "10px 20px",
       }}
     >
       <div className="row">
