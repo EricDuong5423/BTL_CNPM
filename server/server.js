@@ -1,24 +1,23 @@
-const express = require("express");
-const app = express();
-const fs = require("fs");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config.env" });
 
-app.use(express.json());
-app.use((req, res, next) => {
-  console.log("Request received at:", req.path);
-  next();
-});
+const DB = process.env.DATABASE.replace(
+  "<PASSWORD>",
+  process.env.DATABASE_PASSWORD
+);
 
-app.patch("/api/v1/tours/:id", (req, res) => {
-  const id = req.params.id * 1;
-  return res.status(200).json({
-    status: "success",
-    data: {
-      tour: "<Updated tour here....>",
-    },
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
+  .then(() => {
+    console.log("Connect database success !!!");
   });
-});
-
-const port = 3000;
+const app = require(`${__dirname}/app`);
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port: ${port}...`);
 });

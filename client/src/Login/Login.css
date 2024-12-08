@@ -1,0 +1,82 @@
+* {
+    top: 0;
+    left: 0;
+}
+body{
+    font-family:Kanit, sans-serif;
+}
+.containerDB {
+    display:flex;
+    height: 100vh;
+    flex:1;
+}
+.left {
+    flex: 6.5; 
+}
+
+.right {
+    flex: 4.5; 
+    display:flex;
+    background-color: #9FCDE8;
+}
+
+.Login_Title {
+    color:#3A4163;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.Login_Frame {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20%;
+}
+
+.Login_Username_Field {
+    width: 500px;
+    color: #3A4163;
+    font-size: 16px;
+}
+
+.Login_Username_Field_Input {
+    margin-top: 10px;
+    border-color:#3A4163;
+    border: width 1px;
+}
+
+.Login_Password_Field {
+    width: 500px;
+    color: #3A4163;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.Login_Password_Field_Input {
+    border-color:#3A4163;
+    border: width 1px;
+}
+
+.Login_Submit {
+    margin-top: 20px;
+}
+
+.Login_Submit_Button {
+    background-color: #3A4163;
+    color:#9FCDE8;
+}
+
+.Forget_Pass_Button {
+    margin-top:20px;
+}
+
+.Forget_Pass {
+    color:#3A4163;
+}
+
+.Image_Edit {
+    position:absolute;
+    left: 45%;
+    top: -8%;
+}
