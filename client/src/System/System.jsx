@@ -3,6 +3,7 @@ import Search from "../Component/Search";
 import AxiosInstance from "../Component/AxiosInstance";
 import Pagination from "../Component/Pagination";
 import "./system.css";
+import { toast } from "react-toastify";
 
 export default function System() {
   const [printer, setPrinter] = useState([
@@ -29,6 +30,7 @@ export default function System() {
     paperType: ["A0", "A1", "A2", "A3", "A4"],
     status: "",
     currentPaper: "",
+    description: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
   const dataPerPage = 5;
@@ -82,6 +84,7 @@ export default function System() {
       try {
         const res = await AxiosInstance.delete(`printers/${id}`);
         // toast.success("Deleted Successfully!");
+        setShowSuccessToast(true);
         console.log(res);
         fetchPrinters();
         // setFilteredData((prevFilteredData) =>
@@ -95,7 +98,8 @@ export default function System() {
         // }
       } catch (error) {
         console.error(error);
-        toast.error("An error occurred while deleting the printer!");
+        // toast.error("An error occurred while deleting the printer!");
+        setShowErrorToast(true);
       }
     }
   };
@@ -124,6 +128,8 @@ export default function System() {
     // Gửi yêu cầu cập nhật trạng thái
     AxiosInstance.patch(`printers/${id}`, body)
       .then((response) => {
+        // toast.success("Cập nhật thành công!");
+        setShowSuccessToast(true);
         console.log("Status updated successfully:", response.data);
         // Cập nhật trạng thái của máy in trong state
         const updatedPrinters = printer.map((item) =>
@@ -134,6 +140,7 @@ export default function System() {
       .catch((error) => {
         console.error("Error updating status:", error);
         // Hiển thị thông báo lỗi nếu cần
+        setShowErrorToast(true);
       });
   };
 
@@ -169,12 +176,16 @@ export default function System() {
           type: "",
           location: "",
           paperType: ["A0", "A1", "A2", "A3", "A4"],
-          status: "",
+          status: true,
           currentPaper: "",
+          description: "",
         });
       }
+      // toast.success("Thành công thêm máy in mới!");
+      setShowSuccessToast(true);
     } catch (error) {
       console.log(res);
+      setShowErrorToast(true);
     }
   };
 
@@ -182,12 +193,43 @@ export default function System() {
     setCurrentPage(page);
   };
 
+  // const handleRandomUsing = () => {
+  //   return Math.random() >= 0.5;
+  // };
+
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+
+  const handleCloseToast = (type) => {
+    if (type === "success") setShowSuccessToast(false);
+    if (type === "error") setShowErrorToast(false);
+  };
+
+  useEffect(() => {
+    if (showSuccessToast) {
+      const timer = setTimeout(() => {
+        handleCloseToast("success");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessToast]);
+
+  useEffect(() => {
+    if (showErrorToast) {
+      const timer = setTimeout(() => {
+        handleCloseToast("error");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showErrorToast]);
+
   return (
     <>
       <div className="container my-5">
         <div className="card" style={{ minHeight: "550px" }}>
           <div className="card-header d-flex justify-content-between align-items-center">
             <h5 className="TitleList">DANH SÁCH MÁY IN</h5>
+
             <div className="d-flex align-items-center">
               <Search
                 onSearchChange={handleSearchChange}
@@ -209,6 +251,7 @@ export default function System() {
                   <th>Mã máy in</th>
                   <th>Kiểu máy</th>
                   <th>Địa điểm</th>
+                  <th>Hoạt động</th>
                   <th>Số giấy hiện dụng</th>
                   <th>Trạng thái</th>
                   <th>Hành động</th>
@@ -221,6 +264,21 @@ export default function System() {
                       <td>{d._id}</td>
                       <td>{d.type}</td>
                       <td>{d.location}</td>
+                      <td>
+                        {d.status &&
+                          (() => {
+                            const random = Math.random() >= 0.5;
+                            return (
+                              <button
+                                className={
+                                  random ? "btn btn-danger" : "btn btn-success"
+                                }
+                              >
+                                {random ? "Bận" : "Trống"}
+                              </button>
+                            );
+                          })()}
+                      </td>
                       <td>{d.currentPaper}</td>
                       <td>
                         {/*d.status ? "Active" : "Inactive"*/}
@@ -237,6 +295,7 @@ export default function System() {
                           </select>
                         </div>
                       </td>
+
                       <td>
                         {/* <button
                           className="btn btn-primary btn-sm me-2"
@@ -270,17 +329,17 @@ export default function System() {
           </div>
           {/* <div className=" align-self-center" id="pagenation">
             <nav aria-label="...">
-              <ul class="pagination pagination">
-                <li class="page-item active" aria-current="page">
-                  <span class="page-link">1</span>
+              <ul className="pagination pagination">
+                <li className="page-item active" aria-current="page">
+                  <span className="page-link">1</span>
                 </li>
-                <li class="page-item">
-                  <a class="page-link" href="#">
+                <li className="page-item">
+                  <a className="page-link" href="#">
                     2
                   </a>
                 </li>
-                <li class="page-item">
-                  <a class="page-link" href="#">
+                <li className="page-item">
+                  <a className="page-link" href="#">
                     3
                   </a>
                 </li>
@@ -385,6 +444,21 @@ export default function System() {
                     <option value={false}>Vô Hiệu Hóa</option>
                   </select>
                 </div>
+                <div className="mb-3">
+                  <label htmlFor="campus" className="form-label">
+                    Mô tả
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="description"
+                    name="description"
+                    value={newPrinter.description}
+                    onChange={handleInputChange}
+                    placeholder=""
+                    required
+                  />
+                </div>
                 <label htmlFor="campus" className="form-label">
                   Loại giấy hỗ trợ
                 </label>
@@ -450,6 +524,55 @@ export default function System() {
             </form>
           </div>
         </div>
+      </div>
+
+      {/* Toast Modal */}
+      <div
+        id="toast-container"
+        className="position-fixed p-3 "
+        style={{ zIndex: 9999 }}
+      >
+        {/* Toast Success */}
+        {showSuccessToast && (
+          <div
+            id="success-toast"
+            className="toast show align-items-center text-white bg-success border-0"
+            role="alert"
+          >
+            <div className="d-flex">
+              <div className="toast-body">
+                <strong>Success!</strong>
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                aria-label="Close"
+                onClick={() => handleCloseToast("success")}
+              ></button>
+            </div>
+          </div>
+        )}
+
+        {/* Toast Error */}
+        {showErrorToast && (
+          <div
+            id="error-toast"
+            className="toast show align-items-center text-white bg-danger border-0"
+            role="alert"
+          >
+            <div className="d-flex">
+              <div className="toast-body">
+                <strong>Error!</strong>
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                aria-label="Close"
+                onClick={() => handleCloseToast("error")}
+              ></button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
