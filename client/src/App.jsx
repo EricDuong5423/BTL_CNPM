@@ -13,6 +13,9 @@ import Layout from "./Component/Layout";
 import Login from "./Login/Login";
 import ProtectedRoute from "./Login/ProtectedRoutes";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   const location = useLocation();
   const noNavbar =
@@ -28,6 +31,7 @@ function App() {
       {/* <Route path="/" element={<Login />} /> */}
       {/* </Routes> */}
       {/* <Footer /> */}
+      <ToastContainer />
       {noNavbar ? (
         <Routes>
           <Route path="/" element={<Login />} />
