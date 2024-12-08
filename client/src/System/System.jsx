@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Search from "../Component/Search";
 import AxiosInstance from "../Component/AxiosInstance";
 import Pagination from "../Component/Pagination";
-import './system.css';
+import "./system.css";
 
 export default function System() {
   const [printer, setPrinter] = useState([
@@ -116,7 +116,7 @@ export default function System() {
     // console.log(id, "+", currentStatus);
 
     // Đảo ngược trạng thái hiện tại
-    const newStatus = !currentStatus;
+    const newStatus = currentStatus === "Active" ? true : false;
 
     // Tạo body của request
     const body = { status: newStatus };
@@ -198,7 +198,7 @@ export default function System() {
                 data-bs-toggle="modal"
                 data-bs-target="#AddNewPrinter"
               >
-                + 
+                +
               </button>
             </div>
           </div>
@@ -223,16 +223,18 @@ export default function System() {
                       <td>{d.location}</td>
                       <td>{d.currentPaper}</td>
                       <td>
-                          {/*d.status ? "Active" : "Inactive"*/}
-                          <div className="form">
-                        <select
-                    className="form-select"
-                    defaultValue={d.status ? "Active" : "Inactive"} // Sử dụng "Active" hoặc "Inactive" làm giá trị mặc định
-                    onChange={(e) => handleChangeStatus(d._id, e.target.value)} // Gọi hàm xử lý khi thay đổi
-                >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                </select>
+                        {/*d.status ? "Active" : "Inactive"*/}
+                        <div className="form">
+                          <select
+                            className="form-select"
+                            defaultValue={d.status ? "Active" : "Inactive"} // Sử dụng "Active" hoặc "Inactive" làm giá trị mặc định
+                            onChange={(e) =>
+                              handleChangeStatus(d._id, e.target.value)
+                            } // Gọi hàm xử lý khi thay đổi
+                          >
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                          </select>
                         </div>
                       </td>
                       <td>
