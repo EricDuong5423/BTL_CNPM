@@ -20,7 +20,7 @@ const printerSchema = new mongoose.Schema({
     required: [true, "A printer must have a paper type that it can use"],
   },
   description: {
-    type: [String],
+    type: String,
     trim: true,
     required: [true, "A printer must have a description"],
   },
