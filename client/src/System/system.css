@@ -1,0 +1,92 @@
+.addbutton{
+    background-color: #9FCDE8CC;
+    border-radius: 50%;
+    width: 26px;;
+    height: 26px;;
+    text-align: center;
+    line-height: 5px;
+}
+.TitleList{
+    color: #271E4A ;
+    text-align: right;
+    border-radius: 50px;
+    
+}
+.container{
+    background-color: #E7EDF1;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 20px;
+}
+.deletebutton{
+    width: fit-content;
+    height: fit-content;
+    background-color: #9FCDE8CC;
+    color: #271E4A;
+    border-color: #3A4163;
+
+}
+.search-container {
+    width: auto;
+    height: auto;
+    border-radius: 20px 20px 20px 20px;
+    border: 10px;
+    align-items: center;  
+    background-color: #9FCDE8CC;
+  }
+  
+  .search-input {
+    padding: 7px;
+    border: 2px; 
+    border-radius: 5px; 
+    flex: 1; 
+    background-color: transparent;
+  }
+  
+  .search-icon {
+    margin-left: 20px;  
+    color: #3A4163; 
+  }
+  .card-header{
+    background-color: #E7EDF1;
+    border-radius: 50px;
+  }
+.card-body{
+  background-color: #E7EDF1;
+  border-radius: 50px;
+}
+
+.table{
+  background-color: #9FCDE8CC;
+  border-collapse: collapse; 
+}
+th, td {
+  border: 1px solid #000; 
+  padding: 0%; 
+  text-align: center; 
+}
+th {
+  background-color: #f2f2f2c0; 
+}
+.form-select{
+  background-color: #9FCDE8CC;
+  width: auto;
+  text-align: center;
+  margin: auto;
+}
+.card{
+  border-radius: 50px;
+  background-color: #E7EDF1;
+  border:#000
+}
+.removebutton{
+  background-color: #9FCDE8CC;
+  border-color:#271E4A;
+  color: #271E4A;
+
+}
+.viewbutton{
+  background-color: #9FCDE8CC;
+  border-color:#271E4A;
+  color: #271E4A
+}
