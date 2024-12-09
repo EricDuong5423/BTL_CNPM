@@ -83,8 +83,8 @@ export default function System() {
     if (confirm) {
       try {
         const res = await AxiosInstance.delete(`printers/${id}`);
-        // toast.success("Deleted Successfully!");
-        setShowSuccessToast(true);
+        toast.success("Xóa thành công!");
+
         console.log(res);
         fetchPrinters();
         // setFilteredData((prevFilteredData) =>
@@ -98,8 +98,7 @@ export default function System() {
         // }
       } catch (error) {
         console.error(error);
-        // toast.error("An error occurred while deleting the printer!");
-        setShowErrorToast(true);
+        toast.error("Xóa thất bại!");
       }
     }
   };
@@ -128,8 +127,8 @@ export default function System() {
     // Gửi yêu cầu cập nhật trạng thái
     AxiosInstance.patch(`printers/${id}`, body)
       .then((response) => {
-        // toast.success("Cập nhật thành công!");
-        setShowSuccessToast(true);
+        toast.success("Cập nhật thành công!");
+
         console.log("Status updated successfully:", response.data);
         // Cập nhật trạng thái của máy in trong state
         const updatedPrinters = printer.map((item) =>
@@ -140,7 +139,7 @@ export default function System() {
       .catch((error) => {
         console.error("Error updating status:", error);
         // Hiển thị thông báo lỗi nếu cần
-        setShowErrorToast(true);
+        toast.error("Cập nhật thất bại!");
       });
   };
 
@@ -181,11 +180,10 @@ export default function System() {
           description: "",
         });
       }
-      // toast.success("Thành công thêm máy in mới!");
-      setShowSuccessToast(true);
+      toast.success("Thành công thêm máy in mới!");
     } catch (error) {
       console.log(res);
-      setShowErrorToast(true);
+      toast.error("Thêm máy in thất bại!");
     }
   };
 
@@ -196,32 +194,6 @@ export default function System() {
   // const handleRandomUsing = () => {
   //   return Math.random() >= 0.5;
   // };
-
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [showErrorToast, setShowErrorToast] = useState(false);
-
-  const handleCloseToast = (type) => {
-    if (type === "success") setShowSuccessToast(false);
-    if (type === "error") setShowErrorToast(false);
-  };
-
-  useEffect(() => {
-    if (showSuccessToast) {
-      const timer = setTimeout(() => {
-        handleCloseToast("success");
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [showSuccessToast]);
-
-  useEffect(() => {
-    if (showErrorToast) {
-      const timer = setTimeout(() => {
-        handleCloseToast("error");
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [showErrorToast]);
 
   return (
     <>
@@ -525,7 +497,6 @@ export default function System() {
           </div>
         </div>
       </div>
-
       {/* Toast Modal */}
       <div
         id="toast-container"
