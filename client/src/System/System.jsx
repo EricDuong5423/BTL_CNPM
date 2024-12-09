@@ -497,6 +497,54 @@ export default function System() {
           </div>
         </div>
       </div>
+      {/* Toast Modal */}
+      <div
+        id="toast-container"
+        className="position-fixed p-3 "
+        style={{ zIndex: 9999 }}
+      >
+        {/* Toast Success */}
+        {showSuccessToast && (
+          <div
+            id="success-toast"
+            className="toast show align-items-center text-white bg-success border-0"
+            role="alert"
+          >
+            <div className="d-flex Success_Container">
+              <div className="toast-body">
+                <strong>Thành công!</strong>
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                aria-label="Close"
+                onClick={() => handleCloseToast("success")}
+              ></button>
+            </div>
+          </div>
+        )}
+
+        {/* Toast Error */}
+        {showErrorToast && (
+          <div
+            id="error-toast"
+            className="toast show align-items-center text-white bg-danger border-0"
+            role="alert"
+          >
+            <div className="d-flex">
+              <div className="toast-body">
+                <strong>Error!</strong>
+              </div>
+              <button
+                type="button"
+                className="btn-close btn-close-white me-2 m-auto"
+                aria-label="Close"
+                onClick={() => handleCloseToast("error")}
+              ></button>
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 }
