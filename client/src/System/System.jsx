@@ -539,9 +539,9 @@ export default function System() {
             className="toast show align-items-center text-white bg-success border-0"
             role="alert"
           >
-            <div className="d-flex">
+            <div className="d-flex Success_Container">
               <div className="toast-body">
-                <strong>Success!</strong>
+                <strong>Thành công!</strong>
               </div>
               <button
                 type="button"
