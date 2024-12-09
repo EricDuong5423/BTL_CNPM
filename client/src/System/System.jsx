@@ -262,8 +262,8 @@ export default function System() {
                               handleChangeStatus(d._id, e.target.value)
                             } // Gọi hàm xử lý khi thay đổi
                           >
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
+                            <option value="Active">Kích hoạt</option>
+                            <option value="Inactive">Vô hiệu hoá</option>
                           </select>
                         </div>
                       </td>
