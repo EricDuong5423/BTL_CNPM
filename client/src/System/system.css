@@ -81,6 +81,12 @@ th {
 }
 .removebutton{
   background-color: #9FCDE8CC;
-  border-color:#9FCDE8CC;
+  border-color:#271E4A;
+  color: #271E4A;
 
+}
+.viewbutton{
+  background-color: #9FCDE8CC;
+  border-color:#271E4A;
+  color: #271E4A
 }
