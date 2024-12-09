@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+const crypto = require("crypto");
 const User = require("../models/userModels");
 
 // Maps tokens to usernames. That's all we need for now.
@@ -29,24 +29,32 @@ function invalidateToken(token) {
 
 exports.getUsernameByToken = (token) => {
   return currentTokens.get(token);
-}
+};
 
 exports.signupRoute = async (req, res) => {
   try {
     const data = {
       username: req.body.username,
       password: req.body.password,
-      realName: req.body.realName
+      realName: req.body.realName,
     };
 
     function isValidString(x) {
-      return ((typeof x === "string") || (x instanceof String)) && (x.length > 0) && (x.length <= 128);
+      return (
+        (typeof x === "string" || x instanceof String) &&
+        x.length > 0 &&
+        x.length <= 128
+      );
     }
 
-    if (!isValidString(data.username) || !isValidString(data.password) || !isValidString(data.realName)) {
+    if (
+      !isValidString(data.username) ||
+      !isValidString(data.password) ||
+      !isValidString(data.realName)
+    ) {
       res.status(400).json({
         status: "fail",
-        message: "Missing fields or fields too long/short"
+        message: "Missing fields or fields too long/short",
       });
 
       return;
@@ -56,7 +64,7 @@ exports.signupRoute = async (req, res) => {
     if (existingUser) {
       res.status(409).json({
         status: "fail",
-        message: "A user with this username already exists"
+        message: "A user with this username already exists",
       });
 
       return;
@@ -69,8 +77,8 @@ exports.signupRoute = async (req, res) => {
       token: token,
       user: {
         name: data.username,
-        realName: data.realName
-      }
+        realName: data.realName,
+      },
     });
   } catch (err) {
     res.status(404).json({
@@ -78,20 +86,20 @@ exports.signupRoute = async (req, res) => {
       message: err,
     });
   }
-}
+};
 
 exports.loginRoute = async (req, res) => {
   try {
     const apparentCredentials = {
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
     };
 
     const matchedUser = await User.findOne(apparentCredentials);
     if (!matchedUser) {
       res.status(401).json({
         status: "fail",
-        message: "No such account with these credentials"
+        message: "No such account with these credentials",
       });
 
       return;
@@ -104,8 +112,8 @@ exports.loginRoute = async (req, res) => {
       token: token,
       user: {
         name: matchedUser.username,
-        realName: matchedUser.realName
-      }
+        realName: matchedUser.realName,
+      },
     });
   } catch (err) {
     res.status(404).json({
@@ -113,7 +121,7 @@ exports.loginRoute = async (req, res) => {
       message: err,
     });
   }
-}
+};
 
 exports.logoutRoute = async (req, res) => {
   try {
@@ -121,12 +129,12 @@ exports.logoutRoute = async (req, res) => {
 
     if (invalidateToken(token)) {
       res.status(200).json({
-        status: "success"
+        status: "success",
       });
     } else {
       res.status(200).json({
         status: "fail",
-        message: "No such token"
+        message: "No such token",
       });
     }
   } catch (err) {
@@ -135,7 +143,7 @@ exports.logoutRoute = async (req, res) => {
       message: err,
     });
   }
-}
+};
 
 exports.deleteAccountRoute = async (req, res) => {
   try {
@@ -146,12 +154,12 @@ exports.deleteAccountRoute = async (req, res) => {
       await User.findOneAndRemove({ username: username });
       invalidateToken(token);
       res.status(200).json({
-        status: "success"
+        status: "success",
       });
     } else {
       res.status(200).json({
         status: "fail",
-        message: "No such token"
+        message: "No such token",
       });
     }
   } catch (err) {
@@ -160,4 +168,4 @@ exports.deleteAccountRoute = async (req, res) => {
       message: err,
     });
   }
-}
+};

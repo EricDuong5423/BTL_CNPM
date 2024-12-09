@@ -150,8 +150,7 @@ export default function System() {
       !newPrinter.type ||
       !newPrinter.location ||
       !newPrinter.paperType ||
-      Status_selector.value === null ||
-      !newPrinter.status
+      Status_selector.value === null
     ) {
       alert("Vui lòng điền đầy đủ thông tin, kiểm tra lại trạng thái");
       return;
@@ -279,7 +278,7 @@ export default function System() {
                           className="deletebutton btn btn-danger btn-sm"
                           onClick={() => handleDelete(d._id)}
                         >
-                          Delete
+                          Xóa
                         </button>
 
                         {/* <button

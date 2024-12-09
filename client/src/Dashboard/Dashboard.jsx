@@ -43,13 +43,13 @@ export default function Dashboard() {
             <div className="row mt-3 ms-3">
               <div className="col-12 mb-3">
                 <label className="form-label">ID:</label>
-                <div class="h4 pb-2 mb-1 border-bottom border-black w-75">
+                <div className="h4 pb-2 mb-1 border-bottom border-black w-75">
                   {officer.id}
                 </div>
               </div>
               <div className="col-12 mb-3">
                 <label className="form-label">Name:</label>
-                <div class="h4 pb-2 mb-1 border-bottom border-black w-75">
+                <div className="h4 pb-2 mb-1 border-bottom border-black w-75">
                   {officer.name}
                 </div>
               </div>
