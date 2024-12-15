@@ -59,3 +59,4 @@ Hướng dẫn sử dụng dự án:
 - Kế tiếp chạy lệnh: "npm run dev"
 - Kế tiếp vào trình duyệt web và vào đường dẫn: "http://localhost:5173/"
 - Đăng nhập vào bằng tài khoản "SPSO" với mật khẩu: "HCMUTSPSO".
+- Về phần backend thì nhóm đã cho chạy trên server với đường dẫn là: "https://btl-cnpm.onrender.com" (có thể test với api lấy tất cả máy in: "https://btl-cnpm.onrender.com/api/v1/printers")
